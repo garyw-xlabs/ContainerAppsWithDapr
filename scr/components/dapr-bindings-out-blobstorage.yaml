@@ -1,0 +1,11 @@
+kind: Component
+metadata:
+  name: errorqueueblobstore
+spec:
+  type: bindings.localstorage
+  version: v1
+  metadata:
+  - name: rootPath
+    value: C:\\temp\\files
+  scopes:
+  - subscriber

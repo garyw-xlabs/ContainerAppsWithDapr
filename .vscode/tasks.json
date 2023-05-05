@@ -1,0 +1,111 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/scr/Publisher/Publisher/Publisher.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+           
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/scr/Publisher/Publisher/Publisher.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/scr/Publisher/Publisher/Publisher.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "publisher",
+            "appPort": 5118,
+            "httpPort": 3500,
+            "metricsPort": 9090,
+            "grpcPort": 50001,
+            "componentsPath": "./scr/components",
+            "label": "dapr-debug",
+            "type": "daprd",
+            "dependsOn": "build"
+        },
+        {
+            "appId": "publisher",
+            "label": "daprd-down",
+            "type": "daprd-down"
+        },
+        {
+            "label": "consumer-build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/scr/Subscriber/Subscriber/Subscriber.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+           
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "consumer-publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/scr/Subscriber/Subscriber/Subscriber.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "consumer-watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/scr/Subscriber/Subscriber/Subscriber.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "subscriber",
+            "appPort": 5255,
+            "httpPort": 3501,
+            "metricsPort": 9091,
+            "grpcPort": 50002,
+            "componentsPath": "./scr/components",
+            "label": "consumer-dapr-debug",
+            "type": "daprd",
+            "dependsOn": "consumer-build"
+        },
+        {
+            "appId": "subscriber",
+            "label": "consumer-daprd-down",
+            "type": "daprd-down"
+        },
+    ]
+}

@@ -1,0 +1,66 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        },
+        {
+            "name": "Publisher with Dapr",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dapr-debug",
+            "program": "${workspaceFolder}/scr/Publisher/Publisher/bin/Debug/net7.0/Publisher.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS":"http://localhost:5118/",
+                "DAPR_HTTP_PORT":"3500"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            "postDebugTask": "daprd-down"
+        },
+        {
+            "name": "Subscriber with dapr",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "consumer-dapr-debug",
+            "program": "${workspaceFolder}/scr/Subscriber/Subscriber/bin/debug/net7.0/Subscriber.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(http?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS":"http://localhost:5255/",
+                "DAPR_HTTP_PORT":"3501"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            "postDebugTask": "consumer-daprd-down"
+        },
+    ],
+    "compounds": [
+		{
+			"name": "RunAll with Dapr",
+			"configurations": [
+				"Publisher with Dapr",
+				"Subscriber with dapr"
+			],
+			"stopAll": true
+		}
+	]
+}
