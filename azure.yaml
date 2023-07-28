@@ -1,26 +1,27 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
-name: ContainerappsWithDapr
+name: ContainerappsSecurity
 metadata:
-  template: containerapps-with-dapr-demo@0.0.1-beta
+  template: containerapps-security@0.0.1-beta
 services:
-  api:
-    project: ./scr/Publisher/Publisher
+  api-sidecar:
+    project: ./scr/Api/Api
     module: app/api
     docker:
       path: ./Dockerfile
       context: ../
       web:
-      project: scr/Publisher/Publisher/
+      project: scr/Api/Api/
     language: dotnet
     host: containerapp
-  create-user-sub:
-    project: ./scr/Subscriber/Subscriber
-    module: app/Subscriber
+  otherapi-sidecar:
+    project: ./scr/OtherApi/OtherApi
+    module: app/other-api
     docker:
       path: ./Dockerfile
       context: ../
       web:
-      project: scr/Subscriber/Subscriber/
+      project: scr/OtherApi/OtherApi/
     language: dotnet
     host: containerapp
+

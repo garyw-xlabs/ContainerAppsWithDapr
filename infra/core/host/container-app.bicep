@@ -51,14 +51,6 @@ resource app 'Microsoft.App/containerApps@2022-10-01' = {
           passwordSecretRef: 'registry-password'
         }
       ]
-      dapr:{
-        appId:daprName
-        appPort:targetPort
-        enabled:true
-        appProtocol: 'http'
-        enableApiLogging: true
-        logLevel: 'info'        
-      }
     }
     template: {
       containers: [

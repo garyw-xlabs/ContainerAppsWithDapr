@@ -17,13 +17,11 @@ param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
 param containerAppsEnvironmentName string = ''
 param containerRegistryName string = ''
-param cosmosAccountName string = ''
-param cosmosDatabaseName string = ''
 param keyVaultName string = ''
 param logAnalyticsName string = ''
 param resourceGroupName string = ''
 param apiImageName string =''
-
+param otherApiImageName string =''
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
 
@@ -60,7 +58,7 @@ module api './app/api.bicep' = {
   name: 'api'
   scope: rg
   params: {
-    name: '${abbrs.appContainerApps}web-backend-api-${resourceToken}'
+    name: '${abbrs.appContainerApps}api-${resourceToken}'
     location: location
     imageName: apiImageName
     applicationInsightsName: monitoring.outputs.applicationInsightsName
@@ -69,21 +67,34 @@ module api './app/api.bicep' = {
     keyVaultName: keyVault.outputs.name
   }
 }
-
-module createusersubscriber './app/createuser.subscriber.bicep' = {
-  name: 'createuser.subscriber'
+// Other Api backend
+module otherapi './app/otherapi.bicep' = {
+  name: 'otherapi'
   scope: rg
   params: {
-    name: '${abbrs.appContainerApps}createuser-sub-${resourceToken}'
+    name: '${abbrs.appContainerApps}other-api-${resourceToken}'
     location: location
-    imageName: apiImageName
+    imageName: otherApiImageName
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
     keyVaultName: keyVault.outputs.name
   }
 }
-
+// Next App
+// module nextapp './app/nextapp.bicep' = {
+//   name: 'nextapp'
+//   scope: rg
+//   params: {
+//     name: '${abbrs.appContainerApps}next-app-${resourceToken}'
+//     location: location
+//     imageName: nextAppImageName
+//     applicationInsightsName: monitoring.outputs.applicationInsightsName
+//     containerAppsEnvironmentName: containerApps.outputs.environmentName
+//     containerRegistryName: containerApps.outputs.registryName
+//     keyVaultName: keyVault.outputs.name
+//   }
+// }
 
 // Store secrets in a keyvault
 module keyVault './core/security/keyvault.bicep' = {
@@ -110,38 +121,11 @@ module monitoring './core/monitor/monitoring.bicep' = {
   }
 }
 
-// Service Bus Namespace
-module serviceBus './core/servicebus/servicebus.bicep' ={
-  name:'serviceBus'
-  scope : rg
-  params:{
-    location:location
-  }
-}
-
 module storageAccount './core/storage/storage-account.bicep' ={
   name: 'storageAccount'
   scope: rg
   params: {
    location: location
-  }
-}
-
-module daprPubSubComponents './core/dapr/pubsub.bicep' ={
-  name: 'daprPubSubCompents'
-  scope: rg
-  params: {
-    containerAppsEnvironmentName: containerApps.outputs.environmentName
-    serviceBusName: serviceBus.outputs.name
-  }
-}
-
-module daprStorageComponents './core/dapr/errorblobstorage.bicep' ={
-  name: 'daprStorageCompents'
-  scope: rg
-  params: {
-    containerAppsEnvironmentName: containerApps.outputs.environmentName
-    storageAccountName: storageAccount.outputs.name
   }
 }
 
@@ -159,6 +143,10 @@ output AZURE_TENANT_ID string = tenant().tenantId
 output SERVICE_API_IMAGE_NAME  string = api.outputs.SERVICE_API_IMAGE_NAME
 output SERVICE_API_NAME string = api.outputs.SERVICE_API_NAME
 output SERVICE_API_URI  string = api.outputs.SERVICE_API_URI
-output SERVICE_CREATE_USER_SUB_IMAGE_NAME string = createusersubscriber.outputs.SERVICE_CREATE_USER_SUB_IMAGE_NAME
-output SERVICE_CREATE_USER_SUB_NAME string = createusersubscriber.outputs.SERVICE_CREATE_USER_SUB_NAME
-output SERVICE_CREATE_USER_SUB_URI string = createusersubscriber.outputs.SERVICE_CREATE_USER_SUB_URI
+output SERVICE_OTHERAPI_IMAGE_NAME  string = otherapi.outputs.SERVICE_OTHERAPI_IMAGE_NAME
+output SERVICE_OTHERAPI_NAME string = otherapi.outputs.SERVICE_OTHERAPI_NAME
+output SERVICE_OTHERAPI_URI  string = otherapi.outputs.SERVICE_OTHERAPI_URI
+
+// output SERVICE_CREATE_USER_SUB_IMAGE_NAME string = createusersubscriber.outputs.SERVICE_CREATE_USER_SUB_IMAGE_NAME
+// output SERVICE_CREATE_USER_SUB_NAME string = createusersubscriber.outputs.SERVICE_CREATE_USER_SUB_NAME
+// output SERVICE_CREATE_USER_SUB_URI string = createusersubscriber.outputs.SERVICE_CREATE_USER_SUB_URI

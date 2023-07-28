@@ -7,10 +7,10 @@ param containerAppsEnvironmentName string
 param containerRegistryName string
 param imageName string = ''
 param keyVaultName string
-param serviceName string = 'api'
+param serviceName string = 'api-sidecar'
 
 module app '../core/host/container-app.bicep' = {
-  name: '${serviceName}-container-app-module'
+  name: '${serviceName}-app-module'
   params: {
     name: name
     location: location
@@ -19,7 +19,6 @@ module app '../core/host/container-app.bicep' = {
     containerRegistryName: containerRegistryName
     containerCpuCoreCount: '0.25'
     containerMemory: '0.5Gi'
-    daprName: 'publisher'   
     env: [
       {
         name: 'AZURE_KEY_VAULT_ENDPOINT'
