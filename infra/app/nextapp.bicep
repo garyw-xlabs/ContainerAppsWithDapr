@@ -5,7 +5,7 @@ param tags object = {}
 param applicationInsightsName string
 param containerAppsEnvironmentName string
 param containerRegistryName string
-param imageName string = 'containerappssecurity/nextapp-sidecar-playground2:azd-deploy-1690537679'
+param imageName string = ''
 param keyVaultName string
 param serviceName string = 'nextapp-sidecar'
 
